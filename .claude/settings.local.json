@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install)",
+      "Bash(tree:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run dev:*)",
+      "WebFetch(domain:console.firebase.google.com)",
+      "Bash(firebase --version)",
+      "Bash(firebase projects:list:*)",
+      "Bash(firebase login:*)",
+      "Bash(npm update:*)",
+      "Bash(powershell:*)",
+      "Bash(npm run build:*)",
+      "Bash(git add:*)",
+      "Bash(git init:*)",
+      "Bash(git commit:*)",
+      "Bash(gh repo create:*)",
+      "Bash(git remote add:*)",
+      "Bash(git branch:*)",
+      "Bash(git push:*)",
+      "Bash(git rm:*)",
+      "Bash(git reset:*)",
+      "Bash(git checkout:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
