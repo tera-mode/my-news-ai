@@ -5,7 +5,7 @@ export async function POST(request: NextRequest) {
   try {
     const { query, model: modelName } = await request.json();
 
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || 'test-key');
     const model = genAI.getGenerativeModel({ model: modelName || "gemini-1.5-pro" });
 
     console.log(`Testing Google Search with model: ${modelName || "gemini-1.5-pro"}`);

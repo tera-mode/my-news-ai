@@ -2,8 +2,22 @@ import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+// 環境変数のチェック関数
+function getResendClient() {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    throw new Error('RESEND_API_KEY is not configured');
+  }
+  return new Resend(apiKey);
+}
+
+function getGeminiClient() {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) {
+    throw new Error('GEMINI_API_KEY is not configured');
+  }
+  return new GoogleGenerativeAI(apiKey);
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -72,6 +86,7 @@ export async function POST(request: NextRequest) {
         ? 'tera.mode@gmail.com' // 開発環境では固定
         : email;
 
+      const resend = getResendClient();
       const emailResult = await resend.emails.send({
         from: 'News AI <onboarding@resend.dev>', // Resendの認証済みドメインを使用
         to: [targetEmail],
@@ -128,6 +143,7 @@ async function generateNewsWithGemini(searchConditions: any[]) {
     try {
       console.log('Generating news with Gemini for:', condition.description);
 
+      const genAI = getGeminiClient();
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
 
       const searchQuery = `${condition.description} ${condition.keywords.join(' ')} ニュース 最新`;

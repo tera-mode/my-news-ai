@@ -1,7 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+function getGeminiClient() {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) {
+    throw new Error('GEMINI_API_KEY is not configured');
+  }
+  return new GoogleGenerativeAI(apiKey);
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -235,6 +241,7 @@ async function generateRealisticNews(searchConditions: any[]) {
       // WebFetchが失敗した場合はGemini with Google Search Retrieval を使用
       console.log('Using Gemini with Google Search Retrieval...');
 
+      const genAI = getGeminiClient();
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
 
       const searchQuery = `日本 ニュース 最新 ${condition.description} ${condition.keywords.join(' ')}`;
