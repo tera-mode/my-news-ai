@@ -22,7 +22,10 @@
       "Bash(git rm:*)",
       "Bash(git reset:*)",
       "Bash(git checkout:*)",
-      "WebFetch(domain:vercel.com)"
+      "WebFetch(domain:vercel.com)",
+      "WebFetch(domain:ai.google.dev)",
+      "Bash(curl:*)",
+      "WebFetch(domain:newsapi.org)"
     ],
     "deny": [],
     "ask": []
