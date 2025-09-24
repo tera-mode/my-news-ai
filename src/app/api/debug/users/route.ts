@@ -12,6 +12,14 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    // Firebase Admin SDK が利用できない場合
+    if (!adminDb) {
+      return NextResponse.json(
+        { error: 'Firebase Admin SDK が設定されていません' },
+        { status: 503 }
+      );
+    }
+
     // ユーザー一覧を取得
     const usersSnapshot = await adminDb.collection('users').orderBy('createdAt', 'desc').get();
 
@@ -68,6 +76,14 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json(
         { error: '認証が必要です' },
         { status: 401 }
+      );
+    }
+
+    // Firebase Admin SDK が利用できない場合
+    if (!adminDb) {
+      return NextResponse.json(
+        { error: 'Firebase Admin SDK が設定されていません' },
+        { status: 503 }
       );
     }
 

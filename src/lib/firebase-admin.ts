@@ -3,23 +3,38 @@ import { getAuth } from 'firebase-admin/auth';
 import { getFirestore } from 'firebase-admin/firestore';
 import { getStorage } from 'firebase-admin/storage';
 
-const privateKey = process.env.FIREBASE_ADMIN_PRIVATE_KEY?.replace(/\n/g, '\n');
+// Firebase Admin SDK configuration with better error handling
+let app: any;
 
-const firebaseAdminConfig = {
-  credential: cert({
-    projectId: process.env.FIREBASE_ADMIN_PROJECT_ID!,
-    clientEmail: process.env.FIREBASE_ADMIN_CLIENT_EMAIL!,
-    privateKey: privateKey!,
-  }),
-  projectId: process.env.FIREBASE_ADMIN_PROJECT_ID!,
-};
+try {
+  const privateKey = process.env.FIREBASE_ADMIN_PRIVATE_KEY?.replace(/\\n/g, '\n');
+  const projectId = process.env.FIREBASE_ADMIN_PROJECT_ID;
+  const clientEmail = process.env.FIREBASE_ADMIN_CLIENT_EMAIL;
 
-// Initialize Firebase Admin SDK
-const app = getApps().length === 0 ? initializeApp(firebaseAdminConfig) : getApps()[0]!;
+  if (!projectId || !clientEmail || !privateKey) {
+    console.warn('Firebase Admin SDK environment variables not found. Some features may not work.');
+    app = null;
+  } else {
+    const firebaseAdminConfig = {
+      credential: cert({
+        projectId,
+        clientEmail,
+        privateKey,
+      }),
+      projectId,
+    };
 
-// Export services
-export const adminAuth = getAuth(app);
-export const adminDb = getFirestore(app);
-export const adminStorage = getStorage(app);
+    // Initialize Firebase Admin SDK
+    app = getApps().length === 0 ? initializeApp(firebaseAdminConfig) : getApps()[0]!;
+  }
+} catch (error) {
+  console.error('Failed to initialize Firebase Admin SDK:', error);
+  app = null;
+}
+
+// Export services with null checks
+export const adminAuth = app ? getAuth(app) : null;
+export const adminDb = app ? getFirestore(app) : null;
+export const adminStorage = app ? getStorage(app) : null;
 
 export default app;

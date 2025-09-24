@@ -44,3 +44,5 @@ Thumbs.db
 
 # Claude Code documentation (contains sensitive information)
 CLAUDE.md
+
+.vercel
